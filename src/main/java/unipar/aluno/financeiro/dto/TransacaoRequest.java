@@ -1,4 +1,4 @@
-package unipar.aluno.financeiro.exception;
+package unipar.aluno.financeiro.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,13 +9,13 @@ import java.util.Date;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-public class TransacaoFindAllResponse {
+@AllArgsConstructor
+public class TransacaoRequest {
 
     private double quantia;
     private Date dtTransacao;
-    private String categoriaNome;
+    private Long categoriaId;
     private String descricao;
 
 }

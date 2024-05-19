@@ -2,24 +2,29 @@ package unipar.aluno.financeiro.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import unipar.aluno.financeiro.exception.TransacaoFindAllResponse;
+import unipar.aluno.financeiro.dto.TransacaoFindAllResponse;
 import unipar.aluno.financeiro.exception.ValidacaoException;
+import unipar.aluno.financeiro.model.Categoria;
 import unipar.aluno.financeiro.model.Transacao;
+import unipar.aluno.financeiro.repository.CategoriaRepository;
 import unipar.aluno.financeiro.repository.TransacaoRepository;
 
 import javax.naming.NamingException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class TransacaoService {
 
     private TransacaoRepository transacaoRepository;
+    private CategoriaRepository categoriaRepository;
 
     @Autowired
-    public TransacaoService(TransacaoRepository transacaoRepository) {
+    public TransacaoService(TransacaoRepository transacaoRepository, CategoriaRepository categoriaRepository) {
         this.transacaoRepository = transacaoRepository;
+        this.categoriaRepository = categoriaRepository;
     }
 
     public void validateInsertUpdate(Transacao transacao) throws ValidacaoException{
@@ -46,6 +51,30 @@ public class TransacaoService {
 
     public Transacao save(Transacao transacao) throws NamingException, ValidacaoException, SQLException, Exception{
         validateInsertUpdate(transacao);
+
+        Categoria categoria = categoriaRepository.findById(transacao.getCategoria().getId()).orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
+        transacao.setCategoria(categoria);
+
         return transacaoRepository.save(transacao);
+    }
+
+
+
+    public Transacao findById(Long id) throws NamingException, ValidacaoException, SQLException, Exception{
+
+        if (id == null){
+            throw new ValidacaoException("Id da transação não pode ser nulo");
+        }
+
+        Optional<Transacao> transacaoOptional = transacaoRepository.findById(id);
+        return transacaoOptional.orElse(null);
+
+    }
+
+    public void delete(Long id) throws NamingException, ValidacaoException, SQLException, Exception {
+        if(id == null){
+            throw new ValidacaoException("ID da transação não pode ser nulo");
+        }
+        transacaoRepository.deleteById(id);
     }
 }
