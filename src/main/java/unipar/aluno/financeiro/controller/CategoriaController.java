@@ -1,6 +1,7 @@
 package unipar.aluno.financeiro.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import unipar.aluno.financeiro.exception.ValidacaoException;
 import unipar.aluno.financeiro.model.Categoria;
@@ -31,6 +32,15 @@ public class CategoriaController {
     @PostMapping("/post")
     public Categoria postCategoria(@RequestBody Categoria categoria) throws NamingException, ValidacaoException, SQLException {
         return categoriaService.save(categoria);
+    }
+
+    @GetMapping("/getById/{id}")
+    public ResponseEntity<Categoria> getById(@PathVariable Long id) throws NamingException, ValidacaoException, SQLException {
+        Categoria categoria = categoriaService.findById(id);
+        if (categoria == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(categoria);
     }
 
 }

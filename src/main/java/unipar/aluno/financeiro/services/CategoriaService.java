@@ -11,6 +11,7 @@ import javax.naming.NamingException;
 import java.sql.SQLException;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CategoriaService {
@@ -53,4 +54,14 @@ public class CategoriaService {
         validateInsertUpdate(categoria);
         return categoriaRepository.save(categoria);
     }
+
+    public Categoria findById(Long id) throws NamingException, ValidacaoException, SQLException {
+        if (id == null) {
+            throw new ValidacaoException("ID da categoria não pode ser nulo");
+        }
+
+        Optional<Categoria> categoriaOptional = categoriaRepository.findById(id);
+        return categoriaOptional.orElse(null);
+    }
+
 }
