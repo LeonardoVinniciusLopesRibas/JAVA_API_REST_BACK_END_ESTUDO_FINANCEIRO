@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 @RequestMapping("/financeiro")
 public class CategoriaController {
 
-
     private CategoriaService categoriaService;
 
     @Autowired
@@ -25,12 +24,12 @@ public class CategoriaController {
     }
 
     @GetMapping("/getAll")
-    public List<Categoria> getAllCategorias() throws NamingException, ValidacaoException, SQLException, Exception {
+    public List<Categoria> getAllCategorias() throws NamingException, ValidacaoException, SQLException {
         return categoriaService.findAll();
     }
 
     @PostMapping("/post")
-    public Categoria postCategoria(@RequestBody Categoria categoria) throws NamingException, ValidacaoException, SQLException, Exception{
+    public Categoria postCategoria(@RequestBody Categoria categoria) throws NamingException, ValidacaoException, SQLException {
         return categoriaService.save(categoria);
     }
 

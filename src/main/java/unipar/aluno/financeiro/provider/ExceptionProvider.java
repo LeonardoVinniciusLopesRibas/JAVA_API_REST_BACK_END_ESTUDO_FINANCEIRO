@@ -17,9 +17,7 @@ import java.util.Date;
 public class ExceptionProvider {
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ExceptionResponse> handleException(Exception ex, WebRequest request) {
-        ExceptionResponse response = new ExceptionResponse("Erro ao buscar alunos", new Date(), request.getDescription(false), HttpStatus.INTERNAL_SERVER_ERROR.toString());
-        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+    public void handleException(Exception ex, WebRequest request) throws Exception {
+        throw ex;
     }
-
 }

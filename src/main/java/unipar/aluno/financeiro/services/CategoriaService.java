@@ -45,11 +45,11 @@ public class CategoriaService {
         }
     }
 
-    public List<Categoria> findAll()  throws NamingException, ValidacaoException, SQLException, Exception {
+    public List<Categoria> findAll() throws NamingException, ValidacaoException, SQLException {
         return categoriaRepository.findAll();
     }
 
-    public Categoria save(Categoria categoria)  throws NamingException, ValidacaoException, SQLException, Exception {
+    public Categoria save(Categoria categoria) throws NamingException, ValidacaoException, SQLException {
         validateInsertUpdate(categoria);
         return categoriaRepository.save(categoria);
     }
