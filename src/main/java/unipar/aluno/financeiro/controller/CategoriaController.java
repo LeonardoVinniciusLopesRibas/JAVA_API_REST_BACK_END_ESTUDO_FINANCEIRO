@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping("/financeiro")
+@RequestMapping("/financeiro/categoria")
 public class CategoriaController {
 
     private CategoriaService categoriaService;
