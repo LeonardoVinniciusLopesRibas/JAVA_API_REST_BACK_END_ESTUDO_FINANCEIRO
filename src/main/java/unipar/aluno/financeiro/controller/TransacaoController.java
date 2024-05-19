@@ -8,6 +8,7 @@ import unipar.aluno.financeiro.dto.TransacaoRequest;
 import unipar.aluno.financeiro.exception.ValidacaoException;
 import unipar.aluno.financeiro.model.Categoria;
 import unipar.aluno.financeiro.model.Transacao;
+import unipar.aluno.financeiro.services.CategoriaService;
 import unipar.aluno.financeiro.services.TransacaoService;
 
 import javax.naming.NamingException;
@@ -20,10 +21,12 @@ import java.util.List;
 public class TransacaoController {
 
     private TransacaoService transacaoService;
+    private CategoriaService categoriaService;
 
     @Autowired
-    public TransacaoController(TransacaoService transacaoService) {
+    public TransacaoController(TransacaoService transacaoService, CategoriaService categoriaService) {
         this.transacaoService = transacaoService;
+        this.categoriaService = categoriaService;
     }
 
     @GetMapping("/getAll")
@@ -38,9 +41,10 @@ public class TransacaoController {
         transacao.setDt_transacao(transacaoRequest.getDtTransacao());
         transacao.setDescricao(transacaoRequest.getDescricao());
 
-        // Crie uma instância de Categoria com apenas o ID
         Categoria categoria = new Categoria();
-        categoria.setId(transacaoRequest.getCategoriaId());
+        Long id = transacaoRequest.getCategoria();
+        categoria = categoriaService.findById(id);
+
         transacao.setCategoria(categoria);
 
         return transacaoService.save(transacao);
@@ -57,22 +61,23 @@ public class TransacaoController {
     }
 
     @PutMapping("/put/{id}")
-    public ResponseEntity<Transacao> put(@PathVariable Long id, @RequestBody Transacao transacao) throws NamingException, ValidacaoException, SQLException, Exception{
-
+    public ResponseEntity<Transacao> putTransacao(@PathVariable Long id, @RequestBody TransacaoRequest transacaoRequest) throws NamingException, ValidacaoException, SQLException, Exception {
         Transacao transacaoExistente = transacaoService.findById(id);
-        if (transacaoExistente == null){
+        if (transacaoExistente == null) {
             return ResponseEntity.notFound().build();
         }
-
-        transacaoExistente.setQuantia(transacao.getQuantia());
-        transacaoExistente.setDt_transacao(transacao.getDt_transacao());
-        transacaoExistente.setCategoria(transacao.getCategoria());
-        transacaoExistente.setDescricao(transacao.getDescricao());
-
+        transacaoExistente.setQuantia(transacaoRequest.getQuantia());
+        transacaoExistente.setDt_transacao(transacaoRequest.getDtTransacao());
+        transacaoExistente.setDescricao(transacaoRequest.getDescricao());
+        Categoria categoria = categoriaService.findById(transacaoRequest.getCategoria());
+        if (categoria == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        transacaoExistente.setCategoria(categoria);
         Transacao transacaoAtualizada = transacaoService.save(transacaoExistente);
-
         return ResponseEntity.ok(transacaoAtualizada);
     }
+
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Transacao> delete(@PathVariable Long id) throws NamingException, ValidacaoException, SQLException, Exception{

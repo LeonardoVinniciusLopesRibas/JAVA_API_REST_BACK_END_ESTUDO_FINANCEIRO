@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
@@ -21,9 +23,9 @@ public class Transacao {
     private Long id;
 
     private double quantia;
-    private Date dt_transacao;
+    private LocalDate dt_transacao;
 
-    @OneToOne
+    @ManyToOne
     private Categoria categoria;
 
     @Column(name = "descricao", length = 255)

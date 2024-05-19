@@ -1,5 +1,6 @@
 package unipar.aluno.financeiro.controller;
 
+import org.hibernate.annotations.processing.SQL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

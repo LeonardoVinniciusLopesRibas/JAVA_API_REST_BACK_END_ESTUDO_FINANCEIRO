@@ -27,15 +27,14 @@ public class TransacaoService {
         this.categoriaRepository = categoriaRepository;
     }
 
-    public void validateInsertUpdate(Transacao transacao) throws ValidacaoException{
-        if(transacao.getDt_transacao() == null){
+    public void validateInsertUpdate(Transacao transacao) throws ValidacaoException {
+        if (transacao.getDt_transacao() == null) {
             throw new ValidacaoException("Data não pode ser nula");
         }
-        if (transacao.getDescricao().trim().length()>255){
+        if (transacao.getDescricao().trim().length() > 255) {
             throw new ValidacaoException("Descrição deverá ter no máximo 255 caracteres");
         }
     }
-
 
     public List<TransacaoFindAllResponse> findAll() {
 
@@ -49,20 +48,20 @@ public class TransacaoService {
 
     }
 
-    public Transacao save(Transacao transacao) throws NamingException, ValidacaoException, SQLException, Exception{
+    public Transacao save(Transacao transacao) throws NamingException, ValidacaoException, SQLException, Exception {
         validateInsertUpdate(transacao);
-
-        Categoria categoria = categoriaRepository.findById(transacao.getCategoria().getId()).orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
-        transacao.setCategoria(categoria);
-
-        return transacaoRepository.save(transacao);
+        try {
+            return transacaoRepository.save(transacao);
+        } catch (Exception e) {
+            System.out.println("Erro ao salvar a transação: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
     }
 
+    public Transacao findById(Long id) throws NamingException, ValidacaoException, SQLException, Exception {
 
-
-    public Transacao findById(Long id) throws NamingException, ValidacaoException, SQLException, Exception{
-
-        if (id == null){
+        if (id == null) {
             throw new ValidacaoException("Id da transação não pode ser nulo");
         }
 
@@ -72,7 +71,7 @@ public class TransacaoService {
     }
 
     public void delete(Long id) throws NamingException, ValidacaoException, SQLException, Exception {
-        if(id == null){
+        if (id == null) {
             throw new ValidacaoException("ID da transação não pode ser nulo");
         }
         transacaoRepository.deleteById(id);

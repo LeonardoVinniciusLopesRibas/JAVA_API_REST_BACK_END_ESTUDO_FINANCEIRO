@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
@@ -14,7 +16,7 @@ import java.util.Date;
 public class TransacaoFindAllResponse {
 
     private double quantia;
-    private Date dtTransacao;
+    private LocalDate dtTransacao;
     private String categoriaNome;
     private String descricao;
 
