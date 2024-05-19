@@ -64,4 +64,10 @@ public class CategoriaService {
         return categoriaOptional.orElse(null);
     }
 
+    public void delete(Long id) throws NamingException, ValidacaoException, SQLException{
+        if (id == null) {
+            throw new ValidacaoException("ID da categoria não pode ser nulo");
+        }
+        categoriaRepository.deleteById(id);
+    }
 }

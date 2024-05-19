@@ -1,6 +1,7 @@
 package unipar.aluno.financeiro.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import unipar.aluno.financeiro.exception.ValidacaoException;
@@ -40,6 +41,36 @@ public class CategoriaController {
         if (categoria == null) {
             return ResponseEntity.notFound().build();
         }
+        return ResponseEntity.ok(categoria);
+    }
+
+    @PutMapping("/put/{id}")
+    public ResponseEntity<Categoria> put(@PathVariable Long id, @RequestBody Categoria categoria) throws NamingException, ValidacaoException, SQLException {
+
+            Categoria categoriaExistente = categoriaService.findById(id);
+            if (categoriaExistente == null) {
+                return ResponseEntity.notFound().build();
+            }
+
+            categoriaExistente.setCategoria(categoria.getCategoria());
+            categoriaExistente.setTipo(categoria.getTipo());
+
+            Categoria categoriaAtualizada = categoriaService.save(categoriaExistente);
+
+            return ResponseEntity.ok(categoriaAtualizada);
+
+
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Categoria> delete(@PathVariable Long id) throws NamingException, ValidacaoException, SQLException {
+        Categoria categoria = categoriaService.findById(id);
+
+        if (categoria == null){
+            return ResponseEntity.notFound().build();
+        }
+
+        categoriaService.delete(id);
         return ResponseEntity.ok(categoria);
     }
 
