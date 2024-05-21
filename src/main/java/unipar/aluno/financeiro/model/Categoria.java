@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import unipar.aluno.financeiro.exception.ValidTipoCategoria;
 
 @Getter
 @Setter
@@ -30,6 +31,7 @@ public class Categoria {
 
     @Enumerated(EnumType.STRING)
     @NotNull(message = "O tipo da categoria não pode ser nulo")
+    @ValidTipoCategoria
     private TipoCategoriaEnum tipo;
 
 }

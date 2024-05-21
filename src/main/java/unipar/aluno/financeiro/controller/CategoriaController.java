@@ -2,7 +2,9 @@ package unipar.aluno.financeiro.controller;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import unipar.aluno.financeiro.exception.ValidacaoException;
 import unipar.aluno.financeiro.model.Categoria;
@@ -11,6 +13,7 @@ import unipar.aluno.financeiro.services.CategoriaService;
 import javax.naming.NamingException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @CrossOrigin("*")
 @RestController
@@ -30,9 +33,22 @@ public class CategoriaController {
     }
 
     @PostMapping("/post")
-    public Categoria postCategoria(@Valid @RequestBody Categoria categoria) throws ValidacaoException, SQLException, NamingException, Exception {
-        return categoriaService.save(categoria);
+    public ResponseEntity<?> postCategoria(@Valid @RequestBody Categoria categoria, BindingResult bindingResult) throws ValidacaoException, SQLException, NamingException, Exception {
+        if (bindingResult.hasErrors()) {
+            List<String> errors = bindingResult.getAllErrors().stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .collect(Collectors.toList());
+            return ResponseEntity.badRequest().body(errors);
+        }
+
+        try {
+            Categoria savedCategoria = categoriaService.save(categoria);
+            return ResponseEntity.ok(savedCategoria);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao salvar a categoria");
+        }
     }
+
 
     @GetMapping("/getById/{id}")
     public ResponseEntity<Categoria> getById(@PathVariable Long id) throws ValidacaoException, SQLException, NamingException, Exception {
