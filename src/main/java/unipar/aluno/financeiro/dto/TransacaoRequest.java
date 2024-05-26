@@ -18,13 +18,9 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class TransacaoRequest {
 
-    @NotBlank(message = "Quantia não pode ser nula nem vazia")
-    @NotNull(message = "Quantia não pode ser nula")
     @DecimalMin(value = "0.0", inclusive = false, message = "Quantia deve ser maior que zero")
     private double quantia;
 
-    @NotBlank(message = "Data não pode ser nula nem vazia")
-    @NotNull(message = "Data não pode ser nula")
     private LocalDate dtTransacao;
 
     @NotNull(message = "Categoria não pode ser nula")

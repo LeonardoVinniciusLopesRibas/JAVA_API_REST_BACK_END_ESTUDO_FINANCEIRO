@@ -8,6 +8,7 @@ import unipar.aluno.financeiro.dto.TransacaoFindAllResponse;
 import unipar.aluno.financeiro.dto.TransacaoRequest;
 import unipar.aluno.financeiro.exception.ValidacaoException;
 import unipar.aluno.financeiro.model.Categoria;
+import unipar.aluno.financeiro.model.TipoCategoriaEnum;
 import unipar.aluno.financeiro.model.Transacao;
 import unipar.aluno.financeiro.services.CategoriaService;
 import unipar.aluno.financeiro.services.TransacaoService;
@@ -90,5 +91,24 @@ public class TransacaoController {
 
         transacaoService.delete(id);
         return ResponseEntity.ok(transacao);
+    }
+
+    @GetMapping("/transacoes/receitas")
+    public double getTotalReceitas() {
+        List<Transacao> receitas = transacaoService.obterTransacoesPorTipo(TipoCategoriaEnum.RECEITA);
+        return receitas.stream().mapToDouble(Transacao::getQuantia).sum();
+    }
+
+    @GetMapping("/transacoes/despesas")
+    public double getTotalDespesas() {
+        List<Transacao> despesas = transacaoService.obterTransacoesPorTipo(TipoCategoriaEnum.DESPESA);
+        return despesas.stream().mapToDouble(Transacao::getQuantia).sum();
+    }
+
+    @GetMapping("/transacoes/saldo")
+    public double getSaldo() {
+        double totalReceitas = getTotalReceitas();
+        double totalDespesas = getTotalDespesas();
+        return totalReceitas - totalDespesas;
     }
 }
